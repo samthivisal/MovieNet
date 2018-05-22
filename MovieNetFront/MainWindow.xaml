@@ -1,0 +1,15 @@
+﻿<Window x:Class="MovieNetFront.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MovieNetFront"
+        mc:Ignorable="d"
+		DataContext="{Binding Source={StaticResource VMLocator}, Path=MainVM}"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+		<TextBox Text="{Binding Name}" Margin="131,99,483,285" />
+		<Button Content="Cliquer Ici" Command="{Binding MyCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="531,285,0,0"/>
+
+	</Grid>
+</Window>
