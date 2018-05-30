@@ -6,15 +6,15 @@
     <edmx:Diagrams>
       <Diagram DiagramId="ec0803f6908f4a3eaeab5332a986988e" Name="Diagram1" >
         <EntityTypeShape EntityType="DataModel.User" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DataModel.Stars" Width="1.5" PointX="5" PointY="0.75" />
         <EntityTypeShape EntityType="DataModel.Movie" Width="1.5" PointX="6.5" PointY="3.5" />
         <EntityTypeShape EntityType="DataModel.Actor" Width="1.5" PointX="10.25" PointY="3.75" />
         <EntityTypeShape EntityType="DataModel.Comments" Width="1.5" PointX="0.875" PointY="4.375" />
-        <AssociationConnector Association="DataModel.UserStars" />
         <AssociationConnector Association="DataModel.UserComments" />
         <AssociationConnector Association="DataModel.MovieActor" />
-        <AssociationConnector Association="DataModel.MovieStars" />
         <AssociationConnector Association="DataModel.MovieComments" />
+        <EntityTypeShape EntityType="DataModel.Stars" Width="1.5" PointX="4.625" PointY="0.75" />
+        <AssociationConnector Association="DataModel.UserStars" />
+        <AssociationConnector Association="DataModel.MovieStars" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

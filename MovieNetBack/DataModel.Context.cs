@@ -26,9 +26,9 @@ namespace MovieNetBack
         }
     
         public virtual DbSet<User> UserSet { get; set; }
-        public virtual DbSet<Stars> StarsSet { get; set; }
         public virtual DbSet<Movie> MovieSet { get; set; }
         public virtual DbSet<Actor> ActorSet { get; set; }
         public virtual DbSet<Comments> CommentsSet { get; set; }
+        public virtual DbSet<Stars> StarsSet { get; set; }
     }
 }

@@ -7,15 +7,11 @@
     <Schema Namespace="DataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityContainer Name="DataModelStoreContainer">
     <EntitySet Name="UserSet" EntityType="DataModel.Store.UserSet" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="StarsSet" EntityType="DataModel.Store.StarsSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="MovieSet" EntityType="DataModel.Store.MovieSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="ActorSet" EntityType="DataModel.Store.ActorSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CommentsSet" EntityType="DataModel.Store.CommentsSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StarsSet" EntityType="DataModel.Store.StarsSet" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="MovieActor" EntityType="DataModel.Store.MovieActor" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="UserStars" Association="DataModel.Store.UserStars">
-      <End Role="User" EntitySet="UserSet" />
-      <End Role="Stars" EntitySet="StarsSet" />
-    </AssociationSet>
     <AssociationSet Name="UserComments" Association="DataModel.Store.UserComments">
       <End Role="User" EntitySet="UserSet" />
       <End Role="Comments" EntitySet="CommentsSet" />
@@ -28,13 +24,17 @@
       <End Role="Actor" EntitySet="ActorSet" />
       <End Role="MovieActor" EntitySet="MovieActor" />
     </AssociationSet>
-    <AssociationSet Name="MovieStars" Association="DataModel.Store.MovieStars">
-      <End Role="Movie" EntitySet="MovieSet" />
-      <End Role="Stars" EntitySet="StarsSet" />
-    </AssociationSet>
     <AssociationSet Name="MovieComments" Association="DataModel.Store.MovieComments">
       <End Role="Movie" EntitySet="MovieSet" />
       <End Role="Comments" EntitySet="CommentsSet" />
+    </AssociationSet>
+    <AssociationSet Name="UserStars" Association="DataModel.Store.UserStars">
+      <End Role="User" EntitySet="UserSet" />
+      <End Role="Stars" EntitySet="StarsSet" />
+    </AssociationSet>
+    <AssociationSet Name="MovieStars" Association="DataModel.Store.MovieStars">
+      <End Role="Movie" EntitySet="MovieSet" />
+      <End Role="Stars" EntitySet="StarsSet" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="UserSet">
@@ -45,14 +45,6 @@
     <Property Name="Username" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
-  </EntityType>
-  <EntityType Name="StarsSet">
-    <Key>
-      <PropertyRef Name="Value" />
-    </Key>
-    <Property Name="Value" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="User_Id" Type="int" Nullable="false" />
-    <Property Name="Movie_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="MovieSet">
     <Key>
@@ -81,6 +73,15 @@
     <Property Name="User_Id" Type="int" Nullable="false" />
     <Property Name="Movie_Id" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="StarsSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="User_Id" Type="int" Nullable="false" />
+    <Property Name="Movie_Id" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="MovieActor">
     <Key>
       <PropertyRef Name="Movie_Id" />
@@ -89,18 +90,6 @@
     <Property Name="Movie_Id" Type="int" Nullable="false" />
     <Property Name="Actor_Id" Type="int" Nullable="false" />
   </EntityType>
-  <Association Name="UserStars">
-    <End Role="User" Type="DataModel.Store.UserSet" Multiplicity="1" />
-    <End Role="Stars" Type="DataModel.Store.StarsSet" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Stars">
-        <PropertyRef Name="User_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="UserComments">
     <End Role="User" Type="DataModel.Store.UserSet" Multiplicity="1" />
     <End Role="Comments" Type="DataModel.Store.CommentsSet" Multiplicity="*" />
@@ -113,18 +102,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="MovieStars">
-    <End Role="Movie" Type="DataModel.Store.MovieSet" Multiplicity="1" />
-    <End Role="Stars" Type="DataModel.Store.StarsSet" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Movie">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Stars">
-        <PropertyRef Name="Movie_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="MovieComments">
     <End Role="Movie" Type="DataModel.Store.MovieSet" Multiplicity="1" />
     <End Role="Comments" Type="DataModel.Store.CommentsSet" Multiplicity="*" />
@@ -133,6 +110,30 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="Comments">
+        <PropertyRef Name="Movie_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserStars">
+    <End Role="User" Type="DataModel.Store.UserSet" Multiplicity="1" />
+    <End Role="Stars" Type="DataModel.Store.StarsSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Stars">
+        <PropertyRef Name="User_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MovieStars">
+    <End Role="Movie" Type="DataModel.Store.MovieSet" Multiplicity="1" />
+    <End Role="Stars" Type="DataModel.Store.StarsSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Stars">
         <PropertyRef Name="Movie_Id" />
       </Dependent>
     </ReferentialConstraint>
@@ -167,14 +168,9 @@
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="DataModelContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="UserSet" EntityType="DataModel.User" />
-          <EntitySet Name="StarsSet" EntityType="DataModel.Stars" />
           <EntitySet Name="MovieSet" EntityType="DataModel.Movie" />
           <EntitySet Name="ActorSet" EntityType="DataModel.Actor" />
           <EntitySet Name="CommentsSet" EntityType="DataModel.Comments" />
-          <AssociationSet Name="UserStars" Association="DataModel.UserStars">
-            <End Role="User" EntitySet="UserSet" />
-            <End Role="Stars" EntitySet="StarsSet" />
-          </AssociationSet>
           <AssociationSet Name="UserComments" Association="DataModel.UserComments">
             <End Role="User" EntitySet="UserSet" />
             <End Role="Comments" EntitySet="CommentsSet" />
@@ -183,13 +179,18 @@
             <End Role="Movie" EntitySet="MovieSet" />
             <End Role="Actor" EntitySet="ActorSet" />
           </AssociationSet>
-          <AssociationSet Name="MovieStars" Association="DataModel.MovieStars">
-            <End Role="Movie" EntitySet="MovieSet" />
-            <End Role="Stars" EntitySet="StarsSet" />
-          </AssociationSet>
           <AssociationSet Name="MovieComments" Association="DataModel.MovieComments">
             <End Role="Movie" EntitySet="MovieSet" />
             <End Role="Comments" EntitySet="CommentsSet" />
+          </AssociationSet>
+          <EntitySet Name="StarsSet" EntityType="DataModel.Stars" />
+          <AssociationSet Name="UserStars" Association="DataModel.UserStars">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Stars" EntitySet="StarsSet" />
+          </AssociationSet>
+          <AssociationSet Name="MovieStars" Association="DataModel.MovieStars">
+            <End Role="Movie" EntitySet="MovieSet" />
+            <End Role="Stars" EntitySet="StarsSet" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="User">
@@ -200,16 +201,8 @@
           <Property Name="Username" Type="String" Nullable="false" />
           <Property Name="Password" Type="String" Nullable="false" />
           <Property Name="Email" Type="String" Nullable="false" />
-          <NavigationProperty Name="Stars" Relationship="DataModel.UserStars" FromRole="User" ToRole="Stars" />
           <NavigationProperty Name="Comments" Relationship="DataModel.UserComments" FromRole="User" ToRole="Comments" />
-        </EntityType>
-        <EntityType Name="Stars">
-          <Key>
-            <PropertyRef Name="Value" />
-          </Key>
-          <Property Name="Value" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="User" Relationship="DataModel.UserStars" FromRole="Stars" ToRole="User" />
-          <NavigationProperty Name="Movie" Relationship="DataModel.MovieStars" FromRole="Stars" ToRole="Movie" />
+          <NavigationProperty Name="Stars" Relationship="DataModel.UserStars" FromRole="User" ToRole="Stars" />
         </EntityType>
         <EntityType Name="Movie">
           <Key>
@@ -220,8 +213,8 @@
           <Property Name="Type" Type="String" Nullable="false" />
           <Property Name="Resume" Type="String" Nullable="false" />
           <NavigationProperty Name="Actor" Relationship="DataModel.MovieActor" FromRole="Movie" ToRole="Actor" />
-          <NavigationProperty Name="Stars" Relationship="DataModel.MovieStars" FromRole="Movie" ToRole="Stars" />
           <NavigationProperty Name="Comments" Relationship="DataModel.MovieComments" FromRole="Movie" ToRole="Comments" />
+          <NavigationProperty Name="Stars" Relationship="DataModel.MovieStars" FromRole="Movie" ToRole="Stars" />
         </EntityType>
         <EntityType Name="Actor">
           <Key>
@@ -242,10 +235,6 @@
           <NavigationProperty Name="User" Relationship="DataModel.UserComments" FromRole="Comments" ToRole="User" />
           <NavigationProperty Name="Movie" Relationship="DataModel.MovieComments" FromRole="Comments" ToRole="Movie" />
         </EntityType>
-        <Association Name="UserStars">
-          <End Type="DataModel.User" Role="User" Multiplicity="1" />
-          <End Type="DataModel.Stars" Role="Stars" Multiplicity="*" />
-        </Association>
         <Association Name="UserComments">
           <End Type="DataModel.User" Role="User" Multiplicity="1" />
           <End Type="DataModel.Comments" Role="Comments" Multiplicity="*" />
@@ -254,13 +243,26 @@
           <End Type="DataModel.Movie" Role="Movie" Multiplicity="*" />
           <End Type="DataModel.Actor" Role="Actor" Multiplicity="*" />
         </Association>
-        <Association Name="MovieStars">
-          <End Type="DataModel.Movie" Role="Movie" Multiplicity="1" />
-          <End Type="DataModel.Stars" Role="Stars" Multiplicity="*" />
-        </Association>
         <Association Name="MovieComments">
           <End Type="DataModel.Movie" Role="Movie" Multiplicity="1" />
           <End Type="DataModel.Comments" Role="Comments" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Stars">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="String" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="DataModel.UserStars" FromRole="Stars" ToRole="User" />
+          <NavigationProperty Name="Movie" Relationship="DataModel.MovieStars" FromRole="Stars" ToRole="Movie" />
+        </EntityType>
+        <Association Name="UserStars">
+          <End Type="DataModel.User" Role="User" Multiplicity="1" />
+          <End Type="DataModel.Stars" Role="Stars" Multiplicity="*" />
+        </Association>
+        <Association Name="MovieStars">
+          <End Type="DataModel.Movie" Role="Movie" Multiplicity="1" />
+          <End Type="DataModel.Stars" Role="Stars" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -275,13 +277,6 @@
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="Email" ColumnName="Email" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="StarsSet">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Stars)">
-        <MappingFragment StoreEntitySet="StarsSet">
-          <ScalarProperty Name="Value" ColumnName="Value" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -313,14 +308,14 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="UserStars" TypeName="DataModel.UserStars" StoreEntitySet="StarsSet">
-      <EndProperty Name="User">
-        <ScalarProperty Name="Id" ColumnName="User_Id" />
-      </EndProperty>
-      <EndProperty Name="Stars">
-        <ScalarProperty Name="Value" ColumnName="Value" />
-      </EndProperty>
-    </AssociationSetMapping>
+    <EntitySetMapping Name="StarsSet">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Stars)">
+        <MappingFragment StoreEntitySet="StarsSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="UserComments" TypeName="DataModel.UserComments" StoreEntitySet="CommentsSet">
       <EndProperty Name="User">
         <ScalarProperty Name="Id" ColumnName="User_Id" />
@@ -337,19 +332,27 @@
         <ScalarProperty Name="Id" ColumnName="Actor_Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="MovieStars" TypeName="DataModel.MovieStars" StoreEntitySet="StarsSet">
-      <EndProperty Name="Movie">
-        <ScalarProperty Name="Id" ColumnName="Movie_Id" />
-      </EndProperty>
-      <EndProperty Name="Stars">
-        <ScalarProperty Name="Value" ColumnName="Value" />
-      </EndProperty>
-    </AssociationSetMapping>
     <AssociationSetMapping Name="MovieComments" TypeName="DataModel.MovieComments" StoreEntitySet="CommentsSet">
       <EndProperty Name="Movie">
         <ScalarProperty Name="Id" ColumnName="Movie_Id" />
       </EndProperty>
       <EndProperty Name="Comments">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserStars" TypeName="DataModel.UserStars" StoreEntitySet="StarsSet">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="User_Id" />
+      </EndProperty>
+      <EndProperty Name="Stars">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MovieStars" TypeName="DataModel.MovieStars" StoreEntitySet="StarsSet">
+      <EndProperty Name="Movie">
+        <ScalarProperty Name="Id" ColumnName="Movie_Id" />
+      </EndProperty>
+      <EndProperty Name="Stars">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
